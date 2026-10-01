@@ -2,10 +2,11 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: gcc.exe build active file",
-            "command": "C:\\MinGW\\bin\\gcc.exe",
+            "label": "C/C++: g++.exe build active file",
+            "command": "C:\\MinGW\\bin\\g++.exe",
             "args": [
                 "-fdiagnostics-color=always",
+                "-std=c++17",
                 "-g",
                 "${file}",
                 "-o",
@@ -73,6 +74,56 @@
                 "isDefault": true
             },
             "detail": "Compiles and executes the DSA test suite."
+        },
+        {
+            "type": "shell",
+            "label": "Build Word Guess Game GUI",
+            "command": "C:\\MinGW\\bin\\g++.exe",
+            "args": [
+                "-std=c++17",
+                "-O2",
+                "GUI.cpp",
+                "WordGame.cpp",
+                "GuessList.cpp",
+                "-o",
+                "wordguess.exe",
+                "-mwindows",
+                "-lgdi32"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\assignments\\WordGuess"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build"
+            },
+            "detail": "Compiles the native Windows desktop Word Guess GUI."
+        },
+        {
+            "type": "shell",
+            "label": "Build Word Guess Console",
+            "command": "C:\\MinGW\\bin\\g++.exe",
+            "args": [
+                "-std=c++17",
+                "-O2",
+                "main.cpp",
+                "WordGame.cpp",
+                "GuessList.cpp",
+                "-o",
+                "wordguess_cli.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\assignments\\WordGuess"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build"
+            },
+            "detail": "Compiles the CLI version of Word Guess."
         }
     ],
     "version": "2.0.0"

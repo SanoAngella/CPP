@@ -56,20 +56,21 @@ enum ControlIds {
     ID_HIST_CLOSE
 };
 
-// Color Palette
-static const COLORREF COLOR_BG          = RGB(32, 33, 36);    // #202124 (Dark gray background)
-static const COLORREF COLOR_DISPLAY_BG  = RGB(45, 47, 52);    // #2d2f34 (Display card background)
-static const COLORREF COLOR_TEXT_EXPR   = RGB(180, 186, 194); // #b4bac2 (Muted expression text)
-static const COLORREF COLOR_TEXT_RES    = RGB(255, 255, 255); // White result
-static const COLORREF COLOR_TEXT_ERR    = RGB(242, 139, 130); // Soft red for errors
+// Color Palette (Iconic Black & Orange Theme)
+static const COLORREF COLOR_BG          = RGB(14, 14, 16);    // #0e0e10 Pitch Dark / Obsidian background
+static const COLORREF COLOR_DISPLAY_BG  = RGB(24, 24, 28);    // #18181c Display card background
+static const COLORREF COLOR_DISPLAY_BORDER = RGB(52, 54, 62);// #34363e Display card border
+static const COLORREF COLOR_TEXT_EXPR   = RGB(205, 185, 170); // #cdb9aa Warm muted expression text
+static const COLORREF COLOR_TEXT_RES    = RGB(255, 255, 255); // Crisp White result
+static const COLORREF COLOR_TEXT_ERR    = RGB(255, 82, 82);   // Vibrant coral error
 
-static const COLORREF COLOR_BTN_DIGIT   = RGB(60, 64, 67);    // Digit button
-static const COLORREF COLOR_BTN_OP      = RGB(80, 85, 92);    // Operator button
-static const COLORREF COLOR_BTN_FUNC    = RGB(48, 51, 56);    // Function button
-static const COLORREF COLOR_BTN_CLEAR   = RGB(179, 38, 30);   // Clear / Del (Red)
-static const COLORREF COLOR_BTN_EQUALS  = RGB(26, 115, 232);  // Equals (Google Blue)
-static const COLORREF COLOR_BTN_UTIL    = RGB(55, 60, 68);    // Utility / Ans / Hist
-static const COLORREF COLOR_BTN_PRESSED = RGB(100, 105, 115); // Pressed feedback
+static const COLORREF COLOR_BTN_DIGIT   = RGB(36, 36, 40);    // #242428 Deep charcoal digit buttons
+static const COLORREF COLOR_BTN_OP      = RGB(255, 149, 0);   // #ff9500 Radiant Orange operators (+ - * / % ^)
+static const COLORREF COLOR_BTN_FUNC    = RGB(26, 27, 32);    // #1a1b20 Sleek dark slate function buttons
+static const COLORREF COLOR_BTN_CLEAR   = RGB(216, 67, 21);   // #d84315 Warm Burnt Orange for AC / C / DEL
+static const COLORREF COLOR_BTN_EQUALS  = RGB(255, 122, 0);   // #ff7a00 Radiant Bold Orange for Equals (=)
+static const COLORREF COLOR_BTN_UTIL    = RGB(32, 33, 38);    // #202126 Dark slate utility buttons (RAD, HIST, +/-, ANS)
+static const COLORREF COLOR_BTN_PRESSED = RGB(220, 110, 0);   // Pressed feedback
 
 MainWindow::MainWindow()
     : hInstance(nullptr), hwndMain(nullptr), hwndDisplayExpr(nullptr),
@@ -283,43 +284,61 @@ void MainWindow::drawCustomButton(LPDRAWITEMSTRUCT pDIS) {
     RECT rc = pDIS->rcItem;
     bool isPressed = (pDIS->itemState & ODS_SELECTED);
 
-    // Pick button background brush & text color
+    // Pick button background brush & text color & border pen
     HBRUSH fillBrush = hBrushBtnDigit;
     COLORREF textColor = COLOR_TEXT_RES;
+    COLORREF borderColor = RGB(52, 54, 62);
+    bool customBrushAllocated = false;
 
     if (isPressed) {
-        fillBrush = (HBRUSH)GetStockObject(DKGRAY_BRUSH);
+        if (targetBtn->category == ButtonCategory::Operator || targetBtn->category == ButtonCategory::ActionEquals) {
+            fillBrush = CreateSolidBrush(RGB(200, 100, 0));
+            customBrushAllocated = true;
+            borderColor = RGB(255, 140, 0);
+            textColor = RGB(255, 255, 255);
+        } else {
+            fillBrush = CreateSolidBrush(RGB(65, 68, 76));
+            customBrushAllocated = true;
+            borderColor = RGB(100, 105, 115);
+            textColor = RGB(255, 255, 255);
+        }
     } else {
         switch (targetBtn->category) {
             case ButtonCategory::Digit:
                 fillBrush = hBrushBtnDigit;
-                textColor = RGB(245, 245, 245);
+                textColor = RGB(255, 255, 255);
+                borderColor = RGB(50, 52, 58);
                 break;
             case ButtonCategory::Operator:
                 fillBrush = hBrushBtnOp;
-                textColor = RGB(255, 214, 102); // Warm accent for operators
+                textColor = RGB(255, 255, 255); // Bold white on vibrant orange
+                borderColor = RGB(255, 175, 45);
                 break;
             case ButtonCategory::Function:
                 fillBrush = hBrushBtnFunc;
-                textColor = RGB(140, 200, 255); // Soft cyan/blue for functions
+                textColor = RGB(255, 183, 77);  // Warm glowing amber for functions
+                borderColor = RGB(42, 44, 52);
                 break;
             case ButtonCategory::ActionClear:
                 fillBrush = hBrushBtnClear;
-                textColor = RGB(255, 255, 255);
+                textColor = RGB(255, 255, 255); // White on burnt orange
+                borderColor = RGB(235, 80, 30);
                 break;
             case ButtonCategory::ActionEquals:
                 fillBrush = hBrushBtnEquals;
-                textColor = RGB(255, 255, 255);
+                textColor = RGB(255, 255, 255); // Bold white on radiant equals orange
+                borderColor = RGB(255, 155, 25);
                 break;
             case ButtonCategory::Utility:
                 fillBrush = hBrushBtnUtil;
-                textColor = RGB(168, 218, 220);
+                textColor = RGB(255, 175, 64);  // Warm amber for utilities (RAD, HIST, +/-, ANS)
+                borderColor = RGB(48, 50, 58);
                 break;
         }
     }
 
     // Draw rounded rectangle
-    HPEN hPen = CreatePen(PS_SOLID, 1, isPressed ? RGB(120, 120, 120) : RGB(50, 53, 58));
+    HPEN hPen = CreatePen(PS_SOLID, 1, borderColor);
     HGDIOBJ oldPen = SelectObject(hdc, hPen);
     HGDIOBJ oldBrush = SelectObject(hdc, fillBrush);
 
@@ -328,6 +347,9 @@ void MainWindow::drawCustomButton(LPDRAWITEMSTRUCT pDIS) {
     SelectObject(hdc, oldBrush);
     SelectObject(hdc, oldPen);
     DeleteObject(hPen);
+    if (customBrushAllocated) {
+        DeleteObject(fillBrush);
+    }
 
     // Draw text centered
     SetBkMode(hdc, TRANSPARENT);

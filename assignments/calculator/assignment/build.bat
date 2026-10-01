@@ -1,8 +1,9 @@
 @echo off
 setlocal enabledelayedexpansion
+cd /d "%~dp0"
 
 echo ==========================================================
-echo    DSA CALCULATOR - AUTOMATED BUILD & TEST SCRIPT
+echo    DSA CALCULATOR - AUTOMATED BUILD ^& TEST SCRIPT
 echo ==========================================================
 
 :: Detect C++ Compiler

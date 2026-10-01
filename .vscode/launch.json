@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run DSA Calculator GUI",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/assignments/calculator/assignment/calculator.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/assignments/calculator/assignment",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
+            "preLaunchTask": "Build DSA Calculator GUI"
+        },
+        {
+            "name": "Run Word Guess Game GUI",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/assignments/WordGuess/wordguess.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/assignments/WordGuess",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
+            "preLaunchTask": "Build Word Guess Game GUI"
+        }
+    ]
+}
