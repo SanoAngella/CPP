@@ -9,6 +9,7 @@ class WordGame
 private:
     std::string secretWord;
     std::string hiddenWord;
+    std::string category;
 
     int attempts;
 
@@ -20,7 +21,8 @@ private:
 public:
     WordGame(
         const std::string& word,
-        int maxAttempts = 6
+        int maxAttempts = 6,
+        const std::string& cat = "General"
     );
 
     void displayGame() const;
@@ -33,6 +35,7 @@ public:
 
     std::string getHiddenWord() const;
     std::string getSecretWord() const;
+    std::string getCategory() const;
     int getAttempts() const;
     std::string getGuessedLetters() const;
 };

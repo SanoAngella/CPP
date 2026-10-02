@@ -5,7 +5,8 @@
 
 WordGame::WordGame(
     const std::string& word,
-    int maxAttempts
+    int maxAttempts,
+    const std::string& cat
 )
 {
     secretWord = word;
@@ -14,6 +15,7 @@ WordGame::WordGame(
         c = std::toupper(static_cast<unsigned char>(c));
     }
 
+    category = cat;
     attempts = maxAttempts;
 
     hiddenWord = "";
@@ -29,24 +31,30 @@ WordGame::WordGame(
 
 void WordGame::displayGame() const
 {
-    std::cout << "\n================================\n";
-    std::cout << "       WORD GUESSING GAME\n";
-    std::cout << "================================\n\n";
+    std::cout << "\n============================================\n";
+    std::cout << "  WORDLE-STYLE GUESSING GAME | " << category << "\n";
+    std::cout << "============================================\n\n";
 
-    std::cout << "Word: ";
-
+    std::cout << "  Word: ";
     for (char c : hiddenWord)
     {
-        std::cout << c << " ";
+        if (c == '_')
+        {
+            std::cout << "[ _ ] ";
+        }
+        else if (c == ' ')
+        {
+            std::cout << "   ";
+        }
+        else
+        {
+            std::cout << "[ " << c << " ] ";
+        }
     }
 
-    std::cout << "\n\nAttempts remaining: "
-              << attempts;
-
-    std::cout << "\nGuessed letters: "
-              << guessedLetters.getLetters();
-
-    std::cout << "\n\n";
+    std::cout << "\n\n  Chances Remaining: " << attempts << " / 6";
+    std::cout << "\n  Guessed Letters:   " << (guessedLetters.getLetters().empty() ? "None yet" : guessedLetters.getLetters());
+    std::cout << "\n--------------------------------------------\n\n";
 }
 
 void WordGame::revealLetter(char letter)
@@ -130,6 +138,11 @@ std::string WordGame::getHiddenWord() const
 std::string WordGame::getSecretWord() const
 {
     return secretWord;
+}
+
+std::string WordGame::getCategory() const
+{
+    return category;
 }
 
 int WordGame::getAttempts() const
